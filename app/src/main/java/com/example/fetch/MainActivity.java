@@ -21,11 +21,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * MainActivity is responsible for fetching, displaying, and grouping data.
+ */
 public class MainActivity extends AppCompatActivity {
+
+    // UI components and data storage structures
     RecyclerView recyclerView;
     List<Item> items = new ArrayList<>();
     HashMap<Integer, List<Item>> groupedItems = new HashMap<>();
-
     Button btnGroup1, btnGroup2, btnGroup3, btnGroup4;
 
     @Override
@@ -33,9 +37,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Initialize buttons
         btnGroup1 = findViewById(R.id.btnGroup1);
         btnGroup2 = findViewById(R.id.btnGroup2);
         btnGroup3 = findViewById(R.id.btnGroup3);
@@ -53,9 +59,16 @@ public class MainActivity extends AppCompatActivity {
         setGroupButtonClickListener(btnGroup3, 3);
         setGroupButtonClickListener(btnGroup4, 4);
 
+        // Fetch and process data
         fetchData();
     }
 
+    /**
+     * Set click listeners for group buttons.
+     *
+     * @param button Button to which the click listener will be attached.
+     * @param groupId Group ID to be used for displaying data.
+     */
     private void setGroupButtonClickListener(Button button, int groupId) {
         button.setOnClickListener(view -> {
             displayGroup(groupId);
@@ -65,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetches data from the provided URL, processes the data,
+     * and updates the UI.
+     */
     private void fetchData() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -88,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     items.removeIf(item -> item.name == null || item.name.trim().isEmpty());
                     items.sort(new ItemComparator());
 
+                    // Group the items
                     for (Item item : items) {
                         if (!groupedItems.containsKey(item.listId)) {
                             groupedItems.put(item.listId, new ArrayList<>());
@@ -97,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
                     runOnUiThread(() -> {
                         recyclerView.setAdapter(new ItemAdapter(items));
+
                         // Announce for accessibility when new data is loaded
                         recyclerView.announceForAccessibility("New items loaded.");
                     });
@@ -107,6 +126,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Displays items for a particular group in the RecyclerView.
+     *
+     * @param groupId Group ID for which the data will be displayed.
+     */
     private void displayGroup(int groupId) {
         List<Item> group = groupedItems.get(groupId);
         if (group != null) {

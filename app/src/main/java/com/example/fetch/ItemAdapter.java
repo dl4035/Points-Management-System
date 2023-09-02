@@ -10,17 +10,33 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+/**
+ * This adapter is responsible for binding the data of items to the RecyclerView.
+ * It manages both header views (to display the listId) and item views (to display individual item details).
+ */
 public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
     private List<Item> items;
 
-    // Constants for view types
+    // Constants for view types to differentiate between headers and items
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
 
+    /**
+     * Constructor for the ItemAdapter.
+     *
+     * @param items List of items to be displayed in the RecyclerView.
+     */
     public ItemAdapter(List<Item> items) {
         this.items = items;
     }
 
+    /**
+     * Determines the type of view to be displayed at a particular position.
+     *
+     * @param position Position in the items list.
+     * @return Type of view. It can be TYPE_HEADER or TYPE_ITEM.
+     */
     @Override
     public int getItemViewType(int position) {
         if (position == 0 || items.get(position).listId != items.get(position - 1).listId) {
@@ -29,6 +45,13 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return TYPE_ITEM;
     }
 
+    /**
+     * Called when the RecyclerView needs a new ViewHolder of the specified type to represent an item.
+     *
+     * @param parent The ViewGroup into which the new View will be added.
+     * @param viewType The view type of the new View.
+     * @return A new ViewHolder that holds a View of the specified view type.
+     */
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -41,6 +64,12 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    /**
+     * Called to bind the data with the ViewHolder.
+     *
+     * @param holder The ViewHolder that should be updated to represent the contents of the item.
+     * @param position The position within the data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof HeaderViewHolder) {
@@ -51,11 +80,19 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    /**
+     * Returns the total number of items in the dataset.
+     *
+     * @return The total number of items in this adapter.
+     */
     @Override
     public int getItemCount() {
         return items.size();
     }
 
+    /**
+     * ViewHolder class for header items.
+     */
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
         TextView headerTitle;
 
@@ -65,6 +102,9 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    /**
+     * ViewHolder class for individual item details.
+     */
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView itemName;
         TextView itemDetails;
