@@ -20,6 +20,6 @@ Android SDK (14, API level 34)
 
 Mobile Device/Emulator (Pixel 3a API 34)
 
-### Lauch the App / User Guide
+### Launch the App / User Guide
 
 Simply Clone this [repository](https://github.com/dl4035/FetchRewardsExercise/tree/master)  or download the project .zip file and explore in your local Android Studio, and examine the emulator view after sync and build the project.

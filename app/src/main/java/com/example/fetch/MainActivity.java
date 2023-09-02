@@ -1,52 +1,54 @@
 package com.example.fetch;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import com.example.fetch.Item;
-import com.example.fetch.ItemComparator;
-import com.example.fetch.ItemAdapter;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    // Views and data containers
     RecyclerView recyclerView;
     List<Item> items = new ArrayList<>();
+    HashMap<Integer, List<Item>> groupedItems = new HashMap<>();
+
+    Button btnGroup1, btnGroup2, btnGroup3, btnGroup4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set up RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Start fetching data
+        btnGroup1 = findViewById(R.id.btnGroup1);
+        btnGroup2 = findViewById(R.id.btnGroup2);
+        btnGroup3 = findViewById(R.id.btnGroup3);
+        btnGroup4 = findViewById(R.id.btnGroup4);
+
+        btnGroup1.setOnClickListener(view -> displayGroup(1));
+        btnGroup2.setOnClickListener(view -> displayGroup(2));
+        btnGroup3.setOnClickListener(view -> displayGroup(3));
+        btnGroup4.setOnClickListener(view -> displayGroup(4));
+
         fetchData();
     }
 
-    /**
-     * Fetches data from the provided URL and populates the RecyclerView
-     */
     private void fetchData() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -63,18 +65,35 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String jsonData = response.body().string();
-                    Type type = new TypeToken<List<Item>>() {}.getType();
+                    Type type = new TypeToken<List<Item>>() {
+                    }.getType();
                     items = new Gson().fromJson(jsonData, type);
 
-                    // Filter items with empty or null names and sort them
+                    // Filter and sort
                     items.removeIf(item -> item.name == null || item.name.trim().isEmpty());
                     items.sort(new ItemComparator());
 
+                    for (Item item : items) {
+                        if (!groupedItems.containsKey(item.listId)) {
+                            groupedItems.put(item.listId, new ArrayList<>());
+                        }
+                        groupedItems.get(item.listId).add(item);
+                    }
+
                     runOnUiThread(() -> recyclerView.setAdapter(new ItemAdapter(items)));
                 } else {
-                    runOnUiThread(() -> Toast.makeText(MainActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(MainActivity.this, "Failed to fetch data.", Toast.LENGTH_SHORT).show());
                 }
             }
         });
+    }
+
+    private void displayGroup(int groupId) {
+        List<Item> group = groupedItems.get(groupId);
+        if (group != null) {
+            recyclerView.setAdapter(new ItemAdapter(group));
+        } else {
+            Toast.makeText(this, "No items for Group " + groupId, Toast.LENGTH_SHORT).show();
+        }
     }
 }
