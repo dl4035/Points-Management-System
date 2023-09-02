@@ -15,35 +15,51 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:weightSum="4">
+        android:weightSum="4"
+        android:importantForAccessibility="no">
 
         <Button
             android:id="@+id/btnGroup1"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Group 1" />
+            android:text="Group 1"
+            android:contentDescription="Display items from Group 1"
+            android:nextFocusRight="@+id/btnGroup2"
+            style="?android:attr/buttonBarButtonStyle" />
 
         <Button
             android:id="@+id/btnGroup2"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Group 2" />
+            android:text="Group 2"
+            android:contentDescription="Display items from Group 2"
+            android:nextFocusLeft="@+id/btnGroup1"
+            android:nextFocusRight="@+id/btnGroup3"
+            style="?android:attr/buttonBarButtonStyle" />
 
         <Button
             android:id="@+id/btnGroup3"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Group 3" />
+            android:text="Group 3"
+            android:contentDescription="Display items from Group 3"
+            android:nextFocusLeft="@+id/btnGroup2"
+            android:nextFocusRight="@+id/btnGroup4"
+            style="?android:attr/buttonBarButtonStyle" />
 
         <Button
             android:id="@+id/btnGroup4"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Group 4" />
+            android:text="Group 4"
+            android:contentDescription="Display items from Group 4"
+            android:nextFocusLeft="@+id/btnGroup3"
+            style="?android:attr/buttonBarButtonStyle" />
+
     </LinearLayout>
 
     <!-- RecyclerView for displaying the items -->
@@ -52,6 +68,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:contentDescription="List of items"
+        android:importantForAccessibility="yes" />
 
 </LinearLayout>

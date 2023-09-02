@@ -41,12 +41,28 @@ public class MainActivity extends AppCompatActivity {
         btnGroup3 = findViewById(R.id.btnGroup3);
         btnGroup4 = findViewById(R.id.btnGroup4);
 
-        btnGroup1.setOnClickListener(view -> displayGroup(1));
-        btnGroup2.setOnClickListener(view -> displayGroup(2));
-        btnGroup3.setOnClickListener(view -> displayGroup(3));
-        btnGroup4.setOnClickListener(view -> displayGroup(4));
+        // Set content descriptions for accessibility
+        btnGroup1.setContentDescription("Show items for Group 1");
+        btnGroup2.setContentDescription("Show items for Group 2");
+        btnGroup3.setContentDescription("Show items for Group 3");
+        btnGroup4.setContentDescription("Show items for Group 4");
+
+        // Set the click listeners for the buttons
+        setGroupButtonClickListener(btnGroup1, 1);
+        setGroupButtonClickListener(btnGroup2, 2);
+        setGroupButtonClickListener(btnGroup3, 3);
+        setGroupButtonClickListener(btnGroup4, 4);
 
         fetchData();
+    }
+
+    private void setGroupButtonClickListener(Button button, int groupId) {
+        button.setOnClickListener(view -> {
+            displayGroup(groupId);
+
+            // Send an accessibility event to announce the change with Talkback
+            recyclerView.announceForAccessibility("Displaying items for Group " + groupId);
+        });
     }
 
     private void fetchData() {
@@ -65,8 +81,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String jsonData = response.body().string();
-                    Type type = new TypeToken<List<Item>>() {
-                    }.getType();
+                    Type type = new TypeToken<List<Item>>() {}.getType();
                     items = new Gson().fromJson(jsonData, type);
 
                     // Filter and sort
@@ -80,7 +95,11 @@ public class MainActivity extends AppCompatActivity {
                         groupedItems.get(item.listId).add(item);
                     }
 
-                    runOnUiThread(() -> recyclerView.setAdapter(new ItemAdapter(items)));
+                    runOnUiThread(() -> {
+                        recyclerView.setAdapter(new ItemAdapter(items));
+                        // Announce for accessibility when new data is loaded
+                        recyclerView.announceForAccessibility("New items loaded.");
+                    });
                 } else {
                     runOnUiThread(() -> Toast.makeText(MainActivity.this, "Failed to fetch data.", Toast.LENGTH_SHORT).show());
                 }
