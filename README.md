@@ -1,6 +1,6 @@
-## FetchRewardsExercise
+## Points Management System
 
-This is a coding exercise repo on [Fetch Rewards tasks](https://fetch-hiring.s3.amazonaws.com/mobile.html), displaying this list of items to the user with requirements accordingly.
+This is a coding exercise displaying this list of items to the user with requirements accordingly. This project implements a RESTful API for managing user points across various payers.
 
 ### Objectives
 
@@ -22,8 +22,8 @@ Mobile Device/Emulator (Pixel 3a API 34)
 
 ### Launch the App / User Guide
 
-Simply Clone this [repository](https://github.com/dl4035/FetchRewardsExercise/tree/master)  or download the project .zip file and explore in your local Android Studio, and examine the emulator view after sync and build the project.
+Simply Clone this [repository](https://github.com/dl4035/Points-Management-System/tree/master)  or download the project .zip file and explore in your local Android Studio, and examine the emulator view after sync and build the project.
 
 ### Screen Recording demo
 
-![](https://github.com/dl4035/FetchRewardsExercise/blob/master/demo0.gif)
+![](https://github.com/dl4035/Points-Management-System/blob/master/demo0.gif)
